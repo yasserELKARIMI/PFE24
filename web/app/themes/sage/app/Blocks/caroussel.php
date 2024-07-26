@@ -64,11 +64,7 @@ class Caroussel extends Block
         $carousel = Builder::make('carousel');
 
         $carousel
-            // ->addRepeater('items')
-            //     ->addText('title')
-            //     ->addTextarea('text')
-            //     ->addImage('image')
-            // ->endRepeater();
+            
             ->addRepeater('items', [
                 'label' => 'Background',
                 'min' => 1,

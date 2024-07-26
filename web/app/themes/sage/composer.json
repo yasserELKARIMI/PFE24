@@ -34,12 +34,15 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "app/"
+      "App\\": "app/",
+      "App\\Widgets\\": "app/Widgets/"
+
     }
   },
   "require": {
     "php": ">=8.1",
-    "log1x/acf-composer": "^3.0",
+    "guzzlehttp/guzzle": "^7.0",
+    "log1x/acf-composer": "3.0.23",
     "log1x/sage-directives": "^2.0",
     "log1x/sage-svg": "^1.1",
     "roots/acorn": "^4.1"

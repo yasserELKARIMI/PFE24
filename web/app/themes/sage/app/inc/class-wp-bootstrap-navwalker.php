@@ -1,5 +1,8 @@
 <?php
+namespace App\inc;
+use Walker_Nav_Menu;
 /**
+
  * WP Bootstrap Navwalker
  *
  * @package WP-Bootstrap-Navwalker
@@ -18,7 +21,6 @@
  */
 
 // Check if Class Exists.
-if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) :
 	/**
 	 * WP_Bootstrap_Navwalker class.
 	 */
@@ -605,4 +607,3 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) :
 
 	}
 
-endif;

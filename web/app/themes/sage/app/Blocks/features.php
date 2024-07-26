@@ -5,7 +5,7 @@ namespace App\Blocks;
 use Log1x\AcfComposer\Block;
 use Log1x\AcfComposer\Builder;
 
-class features extends Block
+class Features extends Block
 {
     /**
      * The block name.
@@ -36,62 +36,6 @@ class features extends Block
     public $icon = 'editor-ul';
 
     /**
-     * The block keywords.
-     *
-     * @var array
-     */
-    public $keywords = [];
-
-    /**
-     * The block post type allow list.
-     *
-     * @var array
-     */
-    public $post_types = [];
-
-    /**
-     * The parent block type allow list.
-     *
-     * @var array
-     */
-    public $parent = [];
-
-    /**
-     * The ancestor block type allow list.
-     *
-     * @var array
-     */
-    public $ancestor = [];
-
-    /**
-     * The default block mode.
-     *
-     * @var string
-     */
-    public $mode = 'preview';
-
-    /**
-     * The default block alignment.
-     *
-     * @var string
-     */
-    public $align = '';
-
-    /**
-     * The default block text alignment.
-     *
-     * @var string
-     */
-    public $align_text = '';
-
-    /**
-     * The default block content alignment.
-     *
-     * @var string
-     */
-    public $align_content = '';
-
-    /**
      * The supported block features.
      *
      * @var array
@@ -105,11 +49,6 @@ class features extends Block
         'mode' => false,
         'multiple' => true,
         'jsx' => true,
-        'color' => [
-            'background' => true,
-            'text' => true,
-            'gradient' => true,
-        ],
     ];
 
     /**
@@ -126,9 +65,42 @@ class features extends Block
      */
     public $example = [
         'items' => [
-            ['item' => 'Item one'],
-            ['item' => 'Item two'],
-            ['item' => 'Item three'],
+            [
+                'title' => 'Why Us!',
+                'heading' => 'Few Reasons Why People Choosing Us!',
+                'paragraph' => 'People choose us because of our commitment to providing the best quality products, our dedication to customer service, and our competitive prices.Our products are made with the freshest ingredients and are free from preservatives and additives.',
+                'features' => [
+                    ['text' => 'We offer a wide variety of milk'],
+                    ['text' => 'We offer a wide variety of cheese'],
+                    ['text' => 'We offer a wide variety of yogurt'],
+                ],
+                'button_text' => 'Explore More',
+                'button_link' => '#',
+                'experience_img' => [
+                    'url' => 'path/to/experience-image.jpg',
+                    'alt' => 'Experience Image',
+                ],
+                'experience_years' => '25',
+                'experience_text' => 'Years Experience',
+                'award_img' => [
+                    'url' => 'path/to/award-image.jpg',
+                    'alt' => 'Award Image',
+                ],
+                'award_number' => '183',
+                'award_text' => 'Award Winning',
+                'animal_img' => [
+                    'url' => 'path/to/animal-image.jpg',
+                    'alt' => 'Animal Image',
+                ],
+                'animal_number' => '2619',
+                'animal_text' => 'Total Animals',
+                'client_img' => [
+                    'url' => 'path/to/client-image.jpg',
+                    'alt' => 'Client Image',
+                ],
+                'client_number' => '51940',
+                'client_text' => 'Happy Clients',
+            ],
         ],
     ];
 
@@ -161,7 +133,71 @@ class features extends Block
 
         $features
             ->addRepeater('items')
-                ->addText('item')
+                ->addText('title', [
+                    'label' => 'Title',
+                    'required' => true,
+                ])
+                ->addText('heading', [
+                    'label' => 'Heading',
+                    'required' => true,
+                ])
+                ->addTextarea('paragraph', [
+                    'label' => 'Paragraph',
+                    'rows' => 4,
+                ])
+                ->addRepeater('features', [
+                    'label' => 'Features List',
+                ])
+                    ->addText('text', [
+                        'label' => 'Feature Text',
+                    ])
+                ->endRepeater()
+                ->addText('button_text', [
+                    'label' => 'Button Text',
+                ])
+                ->addUrl('button_link', [
+                    'label' => 'Button Link',
+                ])
+                ->addImage('experience_img', [
+                    'label' => 'Experience Image',
+                    'required' => true,
+                ])
+                ->addText('experience_years', [
+                    'label' => 'Experience Years',
+                ])
+                ->addText('experience_text', [
+                    'label' => 'Experience Text',
+                ])
+                ->addImage('award_img', [
+                    'label' => 'Award Image',
+                    'required' => true,
+                ])
+                ->addText('award_number', [
+                    'label' => 'Award Number',
+                ])
+                ->addText('award_text', [
+                    'label' => 'Award Text',
+                ])
+                ->addImage('animal_img', [
+                    'label' => 'Animal Image',
+                    'required' => true,
+                ])
+                ->addText('animal_number', [
+                    'label' => 'Animal Number',
+                ])
+                ->addText('animal_text', [
+                    'label' => 'Animal Text',
+                ])
+                ->addImage('client_img', [
+                    'label' => 'Client Image',
+                    'required' => true,
+                ])
+                ->addText('client_number', [
+                    'label' => 'Client Number',
+                ])
+                ->addText('client_text', [
+                    'label' => 'Client Text',
+                ])
             ->endRepeater();
 
         return $features->build();

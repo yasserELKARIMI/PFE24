@@ -5,7 +5,7 @@ namespace App\Blocks;
 use Log1x\AcfComposer\Block;
 use Log1x\AcfComposer\Builder;
 
-class about extends Block
+class About extends Block
 {
     /**
      * The block name.
@@ -33,63 +33,7 @@ class about extends Block
      *
      * @var string|array
      */
-    public $icon = 'editor-ul';
-
-    /**
-     * The block keywords.
-     *
-     * @var array
-     */
-    public $keywords = [];
-
-    /**
-     * The block post type allow list.
-     *
-     * @var array
-     */
-    public $post_types = [];
-
-    /**
-     * The parent block type allow list.
-     *
-     * @var array
-     */
-    public $parent = [];
-
-    /**
-     * The ancestor block type allow list.
-     *
-     * @var array
-     */
-    public $ancestor = [];
-
-    /**
-     * The default block mode.
-     *
-     * @var string
-     */
-    public $mode = 'preview';
-
-    /**
-     * The default block alignment.
-     *
-     * @var string
-     */
-    public $align = '';
-
-    /**
-     * The default block text alignment.
-     *
-     * @var string
-     */
-    public $align_text = '';
-
-    /**
-     * The default block content alignment.
-     *
-     * @var string
-     */
-    public $align_content = '';
+    public $icon = 'admin-users';
 
     /**
      * The supported block features.
@@ -105,19 +49,7 @@ class about extends Block
         'mode' => false,
         'multiple' => true,
         'jsx' => true,
-        'color' => [
-            'background' => true,
-            'text' => true,
-            'gradient' => true,
-        ],
     ];
-
-    /**
-     * The block styles.
-     *
-     * @var array
-     */
-    public $styles = ['light', 'dark'];
 
     /**
      * The block preview example data.
@@ -125,21 +57,14 @@ class about extends Block
      * @var array
      */
     public $example = [
-        'items' => [
-            ['item' => 'Item one'],
-            ['item' => 'Item two'],
-            ['item' => 'Item three'],
+        'about_title' => 'About Us',
+        'about_content' => 'We are a company dedicated to providing the best services to our clients.',
+        'about_image' => [
+            'url' => 'path/to/about-image.jpg',
+            'alt' => 'About Image',
         ],
-    ];
-
-    /**
-     * The block template.
-     *
-     * @var array
-     */
-    public $template = [
-        'core/heading' => ['placeholder' => 'Hello World'],
-        'core/paragraph' => ['placeholder' => 'Welcome to the About block.'],
+        'experience_years' => '25',
+        'experience_text' => 'Years Experience',
     ];
 
     /**
@@ -148,7 +73,11 @@ class about extends Block
     public function with(): array
     {
         return [
-            'items' => $this->items(),
+            'about_title' => get_field('about_title'),
+            'about_content' => get_field('about_content'),
+            'about_image' => get_field('about_image'),
+            'experience_years' => get_field('experience_years'),
+            'experience_text' => get_field('experience_text'),
         ];
     }
 
@@ -160,21 +89,26 @@ class about extends Block
         $about = Builder::make('about');
 
         $about
-            ->addRepeater('items')
-                ->addText('item')
-            ->endRepeater();
+            ->addText('about_title', [
+                'label' => 'About Title',
+                'required' => true,
+            ])
+            ->addTextarea('about_content', [
+                'label' => 'About Content',
+                'required' => true,
+            ])
+            ->addImage('about_image', [
+                'label' => 'About Image',
+                'required' => true,
+            ])
+            ->addText('experience_years', [
+                'label' => 'Experience Years',
+            ])
+            ->addText('experience_text', [
+                'label' => 'Experience Text',
+            ]);
 
         return $about->build();
-    }
-
-    /**
-     * Retrieve the items.
-     *
-     * @return array
-     */
-    public function items()
-    {
-        return get_field('items') ?: $this->example['items'];
     }
 
     /**

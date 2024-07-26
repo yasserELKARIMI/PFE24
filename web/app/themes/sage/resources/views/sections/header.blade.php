@@ -37,7 +37,7 @@
                     'container' => 'div',
                     'container_class' => 'menu-header-container',
                     'menu_class' => 'navbar-nav ms-auto',
-                    'walker' => new WP_Bootstrap_Navwalker(),
+                    'walker' => new \App\inc\WP_Bootstrap_Navwalker(),
                     'fallback_cb' => 'WP_Bootstrap_Navwalker::fallback',
                     'echo' => false
                 ]);

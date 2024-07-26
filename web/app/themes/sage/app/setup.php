@@ -8,6 +8,11 @@ namespace App;
 
 use function Roots\bundle;
 
+use App\Options\Bexio;
+use App\Options\Settings;
+
+
+
 /**
  * Register the theme assets.
  *
@@ -108,17 +113,18 @@ add_action('widgets_init', function () {
     $config = [
         'before_widget' => '<section class="widget %1$s %2$s">',
         'after_widget' => '</section>',
-        'before_title' => '<h3>',
-        'after_title' => '</h3>',
+        'before_title' => '<h5 class="text-white mb-4">',
+        'after_title' => '</h5>',
     ];
-
-    register_sidebar([
-        'name' => __('Primary', 'sage'),
-        'id' => 'sidebar-primary',
-    ] + $config);
 
     register_sidebar([
         'name' => __('Footer', 'sage'),
         'id' => 'sidebar-footer',
     ] + $config);
+
+    register_sidebar([
+        'name' => __('Primary', 'sage'),
+        'id' => 'sidebar-primary',
+    ] + $config);
 });
+

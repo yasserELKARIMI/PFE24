@@ -5,7 +5,7 @@ namespace App\Blocks;
 use Log1x\AcfComposer\Block;
 use Log1x\AcfComposer\Builder;
 
-class service extends Block
+class Service extends Block
 {
     /**
      * The block name.
@@ -36,62 +36,6 @@ class service extends Block
     public $icon = 'editor-ul';
 
     /**
-     * The block keywords.
-     *
-     * @var array
-     */
-    public $keywords = [];
-
-    /**
-     * The block post type allow list.
-     *
-     * @var array
-     */
-    public $post_types = [];
-
-    /**
-     * The parent block type allow list.
-     *
-     * @var array
-     */
-    public $parent = [];
-
-    /**
-     * The ancestor block type allow list.
-     *
-     * @var array
-     */
-    public $ancestor = [];
-
-    /**
-     * The default block mode.
-     *
-     * @var string
-     */
-    public $mode = 'preview';
-
-    /**
-     * The default block alignment.
-     *
-     * @var string
-     */
-    public $align = '';
-
-    /**
-     * The default block text alignment.
-     *
-     * @var string
-     */
-    public $align_text = '';
-
-    /**
-     * The default block content alignment.
-     *
-     * @var string
-     */
-    public $align_content = '';
-
-    /**
      * The supported block features.
      *
      * @var array
@@ -105,11 +49,6 @@ class service extends Block
         'mode' => false,
         'multiple' => true,
         'jsx' => true,
-        'color' => [
-            'background' => true,
-            'text' => true,
-            'gradient' => true,
-        ],
     ];
 
     /**
@@ -126,9 +65,36 @@ class service extends Block
      */
     public $example = [
         'items' => [
-            ['item' => 'Item one'],
-            ['item' => 'Item two'],
-            ['item' => 'Item three'],
+            [
+                'image' => [
+                    'url' => 'path/to/image-1.jpg',
+                    'alt' => 'Service Image 1',
+                ],
+                'title' => 'Best Animal Selection',
+                'text' => 'Our services include providing high-quality animals that are well-suited for dairy production, as well as offering advice and support on animal health and nutrition.',
+                'button_text' => 'Read More',
+                'button_link' => '#',
+            ],
+            [
+                'image' => [
+                    'url' => 'path/to/image-2.jpg',
+                    'alt' => 'Service Image 2',
+                ],
+                'title' => 'Breeding & Veterinary',
+                'text' => 'Our breeding services include artificial insemination, embryo transfer, and genetic selection. We also provide veterinary services such as health checks, vaccinations, and disease prevention.',
+                'button_text' => 'Read More',
+                'button_link' => '#',
+            ],
+            [
+                'image' => [
+                    'url' => 'path/to/image-3.jpg',
+                    'alt' => 'Service Image 3',
+                ],
+                'title' => 'Care & Milking',
+                'text' => 'Our team of experienced professionals is dedicated to providing the highest quality of care for your cows, from milking to nutrition and health management. We use the latest technology and techniques to ensure that your cows are healthy and producing the highest quality milk.',
+                'button_text' => 'Read More',
+                'button_link' => '#',
+            ],
         ],
     ];
 
@@ -161,7 +127,24 @@ class service extends Block
 
         $service
             ->addRepeater('items')
-                ->addText('item')
+                ->addImage('image', [
+                    'label' => 'Image',
+                    'required' => true,
+                ])
+                ->addText('title', [
+                    'label' => 'Title',
+                    'required' => true,
+                ])
+                ->addTextarea('text', [
+                    'label' => 'Text',
+                    'rows' => 4,
+                ])
+                ->addText('button_text', [
+                    'label' => 'Button Text',
+                ])
+                ->addUrl('button_link', [
+                    'label' => 'Button Link',
+                ])
             ->endRepeater();
 
         return $service->build();
