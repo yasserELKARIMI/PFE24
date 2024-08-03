@@ -1,8 +1,8 @@
 {
-  "name": "roots/sage",
+  "name": "pulsep/fe24",
   "type": "wordpress-theme",
   "license": "MIT",
-  "description": "WordPress starter theme with a modern development workflow",
+  "description": "Pulse PFE 24",
   "homepage": "https://roots.io/sage/",
   "authors": [
     {
@@ -35,8 +35,8 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "App\\Widgets\\": "app/Widgets/"
-
+      "App\\Integrations\\": "app/Integrations/",
+      "App\\Options\\": "app/Options/"
     }
   },
   "require": {
@@ -45,7 +45,7 @@
     "log1x/acf-composer": "3.0.23",
     "log1x/sage-directives": "^2.0",
     "log1x/sage-svg": "^1.1",
-    "roots/acorn": "^4.1"
+    "roots/acorn": "^4.2"
   },
   "require-dev": {
     "laravel/pint": "^1.13"
