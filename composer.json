@@ -45,8 +45,7 @@
     "roots/acorn": "^4.0",
     "generoi/sage-woocommerce": "^1.1",
     "wpackagist-plugin/woocommerce": "8.6.1",
-    "roots/multisite-url-fixer": "^1.1",
-    "wpdesk/woocommerce-faker": "dev-master"
+    "roots/multisite-url-fixer": "^1.1"
 
 
   },

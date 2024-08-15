@@ -1,6 +1,8 @@
 <?php
-
 namespace App\Options;
+
+use App\Integration\WooCommerceBexioOrderIntegration;
+use App\Integration\WooCommerceBexioProductIntegration;
 
 class Settings {
     private static $instance = null;
@@ -15,7 +17,9 @@ class Settings {
         // Register actions for manual sync
         add_action('admin_post_manual_sync_orders', [$this, 'manualSyncOrders']);
         add_action('admin_post_manual_sync_products', [$this, 'manualSyncProducts']);
-        add_action('admin_post_manual_sync_contacts', [$this, 'manualSyncContacts']);
+
+        // Schedule automatic sync if needed
+        add_action('init', [$this, 'scheduleAutomaticSync']);
     }
 
     public static function getInstance() {
@@ -56,6 +60,35 @@ class Settings {
                         'instructions' => 'Enter your WooCommerce Consumer Secret here.',
                         'required' => 1,
                     ],
+                    [
+                        'key' => 'field_sync_method',
+                        'label' => 'Synchronization Method',
+                        'name' => 'sync_method',
+                        'type' => 'radio',
+                        'choices' => [
+                            'manual' => 'Manual',
+                            'automatic' => 'Automatic',
+                        ],
+                        'default_value' => 'manual',
+                        'layout' => 'vertical',
+                        'required' => 1,
+                    ],
+                    [
+                        'key' => 'field_sync_interval',
+                        'label' => 'Sync Interval',
+                        'name' => 'sync_interval',
+                        'type' => 'text',
+                        'instructions' => 'Enter the sync interval in hours (e.g., "24" for daily).',
+                        'conditional_logic' => [
+                            [
+                                [
+                                    'field' => 'field_sync_method',
+                                    'operator' => '==',
+                                    'value' => 'automatic',
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 'location' => [
                     [
@@ -70,12 +103,14 @@ class Settings {
         }
     }
 
-    // Function to get credentials
+    // Function to get credentials and settings
     public static function getCredentials() {
         return [
             'bexio_token' => get_field('bexio_token', 'option'),
             'woocommerce_consumer_key' => get_field('woocommerce_consumer_key', 'option'),
             'woocommerce_consumer_secret' => get_field('woocommerce_consumer_secret', 'option'),
+            'sync_method' => get_field('sync_method', 'option'),
+            'sync_interval' => get_field('sync_interval', 'option'),
         ];
     }
 
@@ -103,17 +138,13 @@ class Settings {
                 <input type="hidden" name="action" value="manual_sync_products">
                 <?php submit_button('Manual Sync Products'); ?>
             </form>
-            <form method="post" action="<?php echo admin_url('admin-post.php'); ?>">
-                <input type="hidden" name="action" value="manual_sync_contacts">
-                <?php submit_button('Manual Sync Contacts'); ?>
-            </form>
         </div>
         <?php
     }
 
     // Function to handle manual sync orders
     public function manualSyncOrders() {
-        $orderIntegration = new \App\Integration\WooCommerceBexioOrderIntegration();
+        $orderIntegration = new WooCommerceBexioOrderIntegration();
         $orderIntegration->syncOrders();
         wp_redirect(admin_url('admin.php?page=bexio-integration&synced_orders=true'));
         exit;
@@ -121,20 +152,30 @@ class Settings {
 
     // Function to handle manual sync products
     public function manualSyncProducts() {
-        $productIntegration = new \App\Integration\WooCommerceBexioProductIntegration();
+        $productIntegration = new WooCommerceBexioProductIntegration();
         $productIntegration->syncProducts();
         wp_redirect(admin_url('admin.php?page=bexio-integration&synced_products=true'));
         exit;
     }
 
-    // Function to handle manual sync contacts
-    public function manualSyncContacts() {
-        $contactIntegration = new \App\Integration\WooCommerceBexioContactIntegration();
-        $contactIntegration->syncContacts();
-        wp_redirect(admin_url('admin.php?page=bexio-integration&synced_contacts=true'));
-        exit;
+    // Function to handle automatic syncs based on timing
+    public function scheduleAutomaticSync() {
+        $credentials = self::getCredentials();
+        if ($credentials['sync_method'] === 'automatic') {
+            $interval = isset($credentials['sync_interval']) ? (int) $credentials['sync_interval'] * 3600 : 24 * 3600; // Default to 24 hours if not set
+            if (!wp_next_scheduled('bexio_auto_sync')) {
+                wp_schedule_event(time(), $interval, 'bexio_auto_sync');
+            }
+        }
     }
 }
 
 // Initialize the Settings class
 \App\Options\Settings::getInstance();
+
+// Hook the automatic synchronization event
+add_action('bexio_auto_sync', function() {
+    $settings = \App\Options\Settings::getInstance();
+    $settings->manualSyncOrders();
+    $settings->manualSyncProducts();
+});
