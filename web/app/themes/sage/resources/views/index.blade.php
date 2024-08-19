@@ -1,19 +1,13 @@
 @extends('layouts.app')
+
 @section('content')
 
-
-<body>
+  <body>
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
     </div>
     <!-- Spinner End -->
-
-    <!-- Navbar Start -->
-    <!-- Navbar End -->
-
-
-
 
 
     <!-- Carousel Start -->
@@ -21,7 +15,7 @@
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="{{ asset('img/carousel-1.jpg') }}" alt="Image">
+                    <img class="w-100" src="{{ asset('images/carousel-1.jpg') }}" alt="Image">
                     <div class="carousel-caption">
                         <div class="container">
                             <div class="row justify-content-start">
@@ -35,7 +29,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img class="w-100" src="{{ asset('img/carousel-2.jpg') }}" alt="Image">
+                    <img class="w-100" src="{{ asset('images/carousel-2.jpg') }}" alt="Image">
                     <div class="carousel-caption">
                         <div class="container">
                             <div class="row justify-content-end">
@@ -77,13 +71,13 @@
                             </div>
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
-                            <img class="img-fluid rounded" src="{{asset('img/service-1.jpg')}}">
+                            <img class="img-fluid rounded" src="{{ asset('images/service-1.jpg') }}">
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.3s">
-                            <img class="img-fluid rounded" src="{{asset('img/service-2.jpg')}}">
+                            <img class="img-fluid rounded" src="{{ asset('images/service-2.jpg') }}">
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.5s">
-                            <img class="img-fluid rounded" src="{{asset('img/service-3.jpg')}}">
+                            <img class="img-fluid rounded" src="{{ asset('images/service-3.jpg') }}">
                         </div>
                     </div>
                 </div>
@@ -93,12 +87,12 @@
                     <p class="mb-4">This dairy company is a family-owned business that has been in operation for over 25 years. They specialize in producing high-quality dairy products, such as milk, cheese, yogurt, and ice cream. Their products are made with fresh ingredients and are free of preservatives and artificial flavors.</p>
                     <div class="row g-5 pt-2 mb-5">
                         <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="{{asset('img/service.png')}}" alt="">
+                            <img class="img-fluid mb-4" src="{{ asset('images/service.png') }}" alt="">
                             <h5 class="mb-3">Dedicated Services</h5>
                             <span>This dairy company provides a wide range of services to its customers, including milk delivery, cheese production, and ice cream manufacturing</span>
                         </div>
                         <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="{{asset('img/product.png')}}" alt="">
+                            <img class="img-fluid mb-4" src="{{ asset('images/product.png') }}" alt="">
                             <h5 class="mb-3">Organic Products</h5>
                             <span>We offer a wide variety of milk, cheese, yogurt, and other dairy products that are sure to please any palate. Our commitment to quality and customer service is unmatched in the industry.</span>
                         </div>
@@ -129,28 +123,28 @@
                         <div class="row g-0">
                             <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
                                 <div class="text-center bg-primary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="{{asset('img/experience.png')}}" alt="">
+                                    <img class="img-fluid mb-4" src="{{ asset('images/experience.png') }}" alt="">
                                     <h1 class="display-6 text-white" data-toggle="counter-up">25</h1>
                                     <span class="fs-5 fw-semi-bold text-secondary">Years Experience</span>
                                 </div>
                             </div>
                             <div class="col-sm-6 wow fadeIn" data-wow-delay="0.3s">
                                 <div class="text-center bg-secondary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="{{asset('img/award.png')}}" alt="">
+                                    <img class="img-fluid mb-4" src="{{ asset('images/award.png') }}" alt="">
                                     <h1 class="display-6" data-toggle="counter-up">183</h1>
                                     <span class="fs-5 fw-semi-bold text-primary">Award Winning</span>
                                 </div>
                             </div>
                             <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
                                 <div class="text-center bg-secondary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="{{asset('img/animal.png')}}" alt="">
+                                    <img class="img-fluid mb-4" src="{{ asset('images/animal.png') }}" alt="">
                                     <h1 class="display-6" data-toggle="counter-up">2619</h1>
                                     <span class="fs-5 fw-semi-bold text-primary">Total Animals</span>
                                 </div>
                             </div>
                             <div class="col-sm-6 wow fadeIn" data-wow-delay="0.7s">
                                 <div class="text-center bg-primary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="{{asset('img/client.png')}}" alt="">
+                                    <img class="img-fluid mb-4" src="{{ asset('images/client.png') }}" alt="">
                                     <h1 class="display-6 text-white" data-toggle="counter-up">51940</h1>
                                     <span class="fs-5 fw-semi-bold text-secondary">Happy Clients</span>
                                 </div>
@@ -165,14 +159,13 @@
 
 
     <!-- Banner Start -->
-    <div class="container-fluid banner my-5 py-5" data-parallax="scroll" data-image-src="{{asset('img/banner_1.jpg')}}">
-        
+    <div class="container-fluid banner my-5 py-5" data-parallax="scroll" data-image-src="{{ asset('images/banner.jpg') }}">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.3s">
                     <div class="row g-4 align-items-center">
                         <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="{{asset('img/banner-1.jpg')}}" alt="">
+                            <img class="img-fluid rounded" src="{{ asset('images/banner-1.jpg') }}" alt="">
                         </div>
                         <div class="col-sm-8">
                             <h2 class="text-white mb-3">We Sell Best Dairy Products</h2>
@@ -184,7 +177,7 @@
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                     <div class="row g-4 align-items-center">
                         <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="{{asset('img/banner-2.jpg')}}" alt="">
+                            <img class="img-fluid rounded" src="{{ asset('images/banner-2.jpg') }}" alt="">
                         </div>
                         <div class="col-sm-8">
                             <h2 class="text-white mb-3">We Deliver Fresh Mild Worldwide</h2>
@@ -210,11 +203,11 @@
                 <div class="col-lg-4 col-md-6 pt-5 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="service-item d-flex h-100">
                         <div class="service-img">
-                            <img class="img-fluid" src="{{asset('img/service-1.jpg')}}" alt="">
+                            <img class="img-fluid" src="{{ asset('images/service-1.jpg') }}" alt="">
                         </div>
                         <div class="service-text p-5 pt-0">
                             <div class="service-icon">
-                                <img class="img-fluid rounded-circle" src="{{asset('img/service-1.jpg')}}" alt="">
+                                <img class="img-fluid rounded-circle" src="{{ asset('images/service-1.jpg') }}" alt="">
                             </div>
                             <h5 class="mb-3">Best Animal Selection</h4>
                             <p class="mb-4">Our services include providing high-quality animals that are well-suited for dairy production, as well as offering advice and support on animal health and nutrition.</p>
@@ -225,11 +218,11 @@
                 <div class="col-lg-4 col-md-6 pt-5 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="service-item d-flex h-100">
                         <div class="service-img">
-                            <img class="img-fluid" src="{{asset('img/service-2.jpg')}}" alt="">
+                            <img class="img-fluid" src="{{ asset('images/service-2.jpg') }}" alt="">
                         </div>
                         <div class="service-text p-5 pt-0">
                             <div class="service-icon">
-                                <img class="img-fluid rounded-circle" src="{{asset('img/service-2.jpg')}}" alt="">
+                                <img class="img-fluid rounded-circle" src="{{ asset('images/service-2.jpg') }}" alt="">
                             </div>
                             <h5 class="mb-3">Breeding & Veterinary</h5>
                             <p class="mb-4">Our breeding services include artificial insemination, embryo transfer, and genetic selection. We also provide veterinary services such as health checks, vaccinations, and disease prevention.</p>
@@ -240,11 +233,11 @@
                 <div class="col-lg-4 col-md-6 pt-5 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="service-item d-flex h-100">
                         <div class="service-img">
-                            <img class="img-fluid" src="{{asset('img/service-3.jpg')}}" alt="">
+                            <img class="img-fluid" src="{{ asset('images/service-3.jpg') }}" alt="">
                         </div>
                         <div class="service-text p-5 pt-0">
                             <div class="service-icon">
-                                <img class="img-fluid rounded-circle" src="{{asset('img/service-3.jpg')}}" alt="">
+                                <img class="img-fluid rounded-circle" src="{{ asset('images/service-3.jpg') }}" alt="">
                             </div>
                             <h5 class="mb-3">Care & Milking</h5>
                             <p class="mb-4">Our team of experienced professionals is dedicated to providing the highest quality of care for your cows, from milking to nutrition and health management. We use the latest technology and techniques to ensure that your cows are healthy and producing the highest quality milk.</p>
@@ -264,13 +257,13 @@
             <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="row g-0">
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-5.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-5.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-5.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-5.jpg') }}" alt="">
                         </a>
                     </div>
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-1.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-1.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-1.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-1.jpg') }}" alt="">
                         </a>
                     </div>
                 </div>
@@ -278,13 +271,13 @@
             <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="row g-0">
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-2.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-2.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-2.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-2.jpg') }}" alt="">
                         </a>
                     </div>
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-6.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-6.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-6.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-6.jpg') }}" alt="">
                         </a>
                     </div>
                 </div>
@@ -292,13 +285,13 @@
             <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="row g-0">
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-7.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-7.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-7.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-7.jpg') }}" alt="">
                         </a>
                     </div>
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-3.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-3.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-3.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-3.jpg') }}" alt="">
                         </a>
                     </div>
                 </div>
@@ -306,13 +299,13 @@
             <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
                 <div class="row g-0">
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-4.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-4.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-4.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-4.jpg') }}" alt="">
                         </a>
                     </div>
                     <div class="col-12">
-                        <a class="d-block" href="{{asset('img/gallery-8.jpg')}}" data-lightbox="gallery">
-                            <img class="img-fluid" src="{{asset('img/gallery-8.jpg')}}" alt="">
+                        <a class="d-block" href="{{ asset('images/gallery-8.jpg') }}" data-lightbox="gallery">
+                            <img class="img-fluid" src="{{ asset('images/gallery-8.jpg') }}" alt="">
                         </a>
                     </div>
                 </div>
@@ -333,7 +326,7 @@
                 <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="product-item">
                         <div class="position-relative">
-                            <img class="img-fluid" src="{{asset('img/product-1.jpg')}}" alt="">
+                            <img class="img-fluid" src="{{ asset('images/product-1.jpg') }}" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-cart"></i></a>
@@ -349,7 +342,7 @@
                 <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="product-item">
                         <div class="position-relative">
-                            <img class="img-fluid" src="{{asset('img/product-2.jpg')}}" alt="">
+                            <img class="img-fluid" src="{{ asset('images/product-2.jpg') }}" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-cart"></i></a>
@@ -365,7 +358,7 @@
                 <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="product-item">
                         <div class="position-relative">
-                            <img class="img-fluid" src="{{asset('img/product-3.jpg')}}" alt="">
+                            <img class="img-fluid" src="{{ asset('images/product-3.jpg') }}" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-cart"></i></a>
@@ -381,7 +374,7 @@
                 <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="product-item">
                         <div class="position-relative">
-                            <img class="img-fluid" src="{{asset('img/product-4.jpg')}}" alt="">
+                            <img class="img-fluid" src="{{ asset('images/product-4.jpg') }}" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-cart"></i></a>
@@ -410,7 +403,7 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="{{asset('img/team-1.jpg')}}" alt="">
+                        <img class="img-fluid rounded mb-4" src="{{ asset('images/team-1.jpg') }}" alt="">
                         <h5>Adam Crew</h5>
                         <p class="text-primary">Founder</p>
                         <div class="d-flex justify-content-center">
@@ -422,7 +415,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="{{asset('img/team-2.jpg')}}" alt="">
+                        <img class="img-fluid rounded mb-4" src="{{ asset('images/team-2.jpg') }}" alt="">
                         <h5>Doris Jordan</h5>
                         <p class="text-primary">Veterinarian</p>
                         <div class="d-flex justify-content-center">
@@ -434,7 +427,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="{{asset('img/team-3.jpg')}}" alt="">
+                        <img class="img-fluid rounded mb-4" src="{{ asset('images/team-3.jpg') }}" alt="">
                         <h5>Jack Dawson</h5>
                         <p class="text-primary">Farmer</p>
                         <div class="d-flex justify-content-center">
@@ -460,34 +453,34 @@
             <div class="row g-5 align-items-center">
                 <div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="testimonial-img">
-                        <img class="img-fluid animated pulse infinite" src="{{asset('img/testimonial-1.jpg')}}" alt="">
-                        <img class="img-fluid animated pulse infinite" src="{{asset('img/testimonial-2.jpg')}}" alt="">
-                        <img class="img-fluid animated pulse infinite" src="{{asset('img/testimonial-3.jpg')}}" alt="">
-                        <img class="img-fluid animated pulse infinite" src="{{asset('img/testimonial-4.jpg')}}" alt="">
+                        <img class="img-fluid animated pulse infinite" src="{{ asset('images/testimonial-1.jpg') }}" alt="">
+                        <img class="img-fluid animated pulse infinite" src="{{ asset('images/testimonial-2.jpg') }}" alt="">
+                        <img class="img-fluid animated pulse infinite" src="{{ asset('images/testimonial-3.jpg') }}" alt="">
+                        <img class="img-fluid animated pulse infinite" src="{{ asset('images/testimonial-4.jpg') }}" alt="">
                     </div>
                 </div>
                 <div class="col-lg-7 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="owl-carousel testimonial-carousel">
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="{{asset('img/testimonial-1.jpg')}}" alt="">
+                            <img class="img-fluid mb-3" src="{{ asset('images/testimonial-1.jpg') }}" alt="">
                             <p class="fs-5">The dairy company has excellent customer service and their products are of the highest quality. I highly recommend them!" .</p>
                             <h5>James Morezz</h5>
                             <span class="text-primary">Client</span>
                         </div>
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="{{asset('img/testimonial-2.jpg')}}" alt="">
+                            <img class="img-fluid mb-3" src="{{ asset('images/testimonial-2.jpg') }}" alt="">
                             <p class="fs-5"> "I've been using this dairy company for years and they never disappoint! Their products are always fresh and delicious." </p>
                             <h5>Merce</h5>
                             <span class="text-primary">Farmer</span>
                         </div>
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="{{asset('img/testimonial-3.jpg')}}" alt="">
+                            <img class="img-fluid mb-3" src="{{ asset('images/testimonial-3.jpg') }}" alt="">
                             <p class="fs-5">"This dairy company is my go-to for all my dairy needs. Their prices are competitive and their delivery is always on time." </p>
                             <h5>Crytun</h5>
                             <span class="text-primary">Farmer</span>
                         </div>
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="{{asset('img/testimonial-4.jpg')}}" alt="">
+                            <img class="img-fluid mb-3" src="{{ asset('images/testimonial-4.jpg') }}" alt="">
                             <p class="fs-5">"I'm so glad I found this dairy company! Their selection of products is vast and their delivery service is reliable."</p>
                             <h5>Tomniq</h5>
                             <span class="text-primary">Farmer</span>
@@ -499,10 +492,9 @@
     </div>
     <!-- Testimonial End -->
 
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</body>
+
 @endsection
-
-    <!-- Footer Start -->
-    <!-- Footer End -->
-
-
-

@@ -69,7 +69,7 @@ class WooCommerceBexioProductIntegration {
             'intern_description' => $product->get_description(),
             'sale_price' => $product->get_price(),
             'sale_total' => $product->get_price(),
-            'currency_id' => 8, // Add currency ID
+            'currency_id' => 8, // Add currency ID (MAD ID added by postman)
             'is_stock' => $product->get_manage_stock(),
             'stock_nr' => $product->get_stock_quantity(),
         ];

@@ -14,6 +14,7 @@ namespace App;
 add_filter('excerpt_more', function () {
     return sprintf(' &hellip; <a href="%s">%s</a>', get_permalink(), __('Continued', 'sage'));
 });
+
 add_action('after_setup_theme', function () {
     add_theme_support('editor-styles');  // Enable support for editor styles.
     add_editor_style('/public/styles/fontawesome/css/all.min.css');

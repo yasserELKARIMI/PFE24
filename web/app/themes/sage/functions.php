@@ -67,4 +67,4 @@ collect(['setup', 'filters'])
     });
 
 
-    require_once get_template_directory() . '/app/inc/class-wp-bootstrap-navwalker.php';
+    require_once get_template_directory() . '/app/Walkers/Custom_Nav_Walker.php';
