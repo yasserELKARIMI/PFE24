@@ -31,14 +31,14 @@ class WooCommerceBexioProductIntegration {
                 $credentials['woocommerce_consumer_secret'],
             ],
         ]);
-
-        // Schedule the events with a 10-minute interval
-        add_action('init', function() {
+        if ($credentials['sync_method'] === 'automatic') {
+            $interval = isset($credentials['sync_interval']) ? (int)$credentials['sync_interval'] * 3600 : 24 * 3600;
             if (!wp_next_scheduled('sync_woocommerce_bexio_products')) {
-                wp_schedule_event(time(), 'every_ten_minutes', 'sync_woocommerce_bexio_products');
+                wp_schedule_event(time(), 'sync_custom_interval', 'sync_woocommerce_bexio_products');
             }
-        });
+        }
 
+        // Hook for manual sync
         add_action('sync_woocommerce_bexio_products', [$this, 'syncProducts']);
     }
 
@@ -64,38 +64,24 @@ class WooCommerceBexioProductIntegration {
             'user_id' => 1, // Placeholder
             'article_type_id' => 1, // Placeholder
             'contact_id' => $this->getBexioContactId($product->get_id()), // Ensure this matches a valid contact ID in Bexio
-            'deliverer_code' => null,
-            'deliverer_name' => null,
-            'deliverer_description' => null,
             'intern_code' => $product->get_sku(),
             'intern_name' => $product->get_name(),
             'intern_description' => $product->get_description(),
-            'purchase_price' => null,
             'sale_price' => $product->get_price(),
-            'purchase_total' => null,
             'sale_total' => $product->get_price(),
-            'currency_id' => $this->getCurrencyId(get_woocommerce_currency()), // Add currency ID
-            'unit_id' => null,
+            'currency_id' => 8, // Add currency ID
             'is_stock' => $product->get_manage_stock(),
             'stock_nr' => $product->get_stock_quantity(),
-            // Removed the unexpected fields
         ];
     }
-    
 
     protected function getBexioContactId($woocommerceProductId) {
-        // Implement the logic to retrieve Bexio contact ID based on WooCommerce product ID
-        // This could involve querying a database or calling another API endpoint
-        // For now, we'll use a placeholder
-        return 1; // Placeholder
+        // Placeholder for retrieving Bexio contact ID based on WooCommerce product ID
+        return 1;
     }
 
     protected function getCurrencyId($currencyCode) {
-        $currencyMap = [
-            'USD' => 1,
-            'EUR' => 2,
-            // Add other currencies as needed
-        ];
-        return isset($currencyMap[$currencyCode]) ? $currencyMap[$currencyCode] : null;
+        // Implement logic to map WooCommerce currency code to Bexio currency ID
+        return 1; // Placeholder
     }
 }

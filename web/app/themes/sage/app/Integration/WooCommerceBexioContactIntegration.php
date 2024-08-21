@@ -1,19 +1,17 @@
 <?php
-
 namespace App\Integration;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use WP_User;
-use App\Options\Settings;
 
 class WooCommerceBexioContactIntegration {
     private $bexioClient;
 
     public function __construct() {
-        $credentials = Settings::getCredentials();
+        $credentials = \App\Options\Settings::getCredentials();
         $this->bexioClient = new Client([
-            'base_uri' => 'https://api.bexio.com/2.0/',
+            'base_uri' => 'https://api.bexio.com/3.0/',
             'headers' => [
                 'Authorization' => 'Bearer ' . $credentials['bexio_token'],
                 'Accept' => 'application/json',
@@ -29,16 +27,11 @@ class WooCommerceBexioContactIntegration {
                 $formattedContact = $this->formatContactForBexio($customer);
                 if ($formattedContact) {
                     error_log('Formatted Contact: ' . print_r($formattedContact, true));
-                    $response = $this->bexioClient->post('contact', ['json' => $formattedContact]);
-                    $responseBody = $response->getBody()->getContents();
-                    error_log('Bexio Response: ' . $responseBody);
-
-                    error_log('Response Status: ' . $response->getStatusCode());
-                    $responseJson = json_decode($responseBody, true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        error_log('Decoded Bexio Response: ' . print_r($responseJson, true));
+                    $contactId = $this->createOrUpdateContact($formattedContact);
+                    if ($contactId) {
+                        error_log('Contact synced successfully: ' . $contactId);
                     } else {
-                        error_log('Failed to decode Bexio response');
+                        error_log('Failed to sync contact for User ' . $customer->ID);
                     }
                 }
             } catch (RequestException $e) {
@@ -52,36 +45,52 @@ class WooCommerceBexioContactIntegration {
     }
 
     protected function getAllCustomers() {
-        $users = get_users(['role' => 'customer']);
-        return $users;
+        return get_users(['role' => 'customer']);
     }
 
-    protected function formatContactForBexio(WP_User $user) {
-        error_log('Formatting contact: ' . $user->ID);
+    public function formatContactForBexio(WP_User $user) {
+        $billingAddress = get_user_meta($user->ID, 'billing_address_1', true);
+        $billingPostcode = get_user_meta($user->ID, 'billing_postcode', true);
+        $billingCity = get_user_meta($user->ID, 'billing_city', true);
+        $billingCountry = get_user_meta($user->ID, 'billing_country', true);
+        $email = $user->user_email;
 
-        $contactData = [
-            'contact_type_id' => 1, // Replace with actual contact type ID if needed
-            'name_1' => $user->user_login, // Ensure this is the correct field
-            'email' => $user->user_email,
-            'user_id' => $user->ID, // Ensure user_id is included
-            'owner_id' => 1 // Replace with actual owner ID if needed
+        $validCountryId = $this->getValidCountryId($billingCountry);
+
+        return [
+            'nr' => null,
+            'contact_type_id' => 1,
+            'name_1' => $user->display_name ?: 'Unknown Name',
+            'address' => $billingAddress ?: 'Unknown Address',
+            'postcode' => $billingPostcode ?: 'Unknown Postcode',
+            'city' => $billingCity ?: 'Unknown City',
+            'country_id' => $validCountryId,
+            'mail' => $email ?: 'Unknown Email',
+            'user_id' => 1, // Ensure user_id is correct
+            'owner_id' => 1, // Example owner_id, adjust as needed
         ];
-
-        error_log('Formatted Contact Data: ' . print_r($contactData, true));
-        return $contactData;
     }
 
-    public function createOrUpdateContact(array $contactData) {
+    private function getValidCountryId($countryCode) {
+        // Fetch valid country ID based on country code or use a mapping
+        $countryMapping = [
+            'GN' => 1, // Example mapping, adjust according to your Bexio configuration
+            'DM' => 2, // Example mapping
+        ];
+        return $countryMapping[$countryCode] ?? null;
+    }
+
+    protected function createOrUpdateContact(array $contactData) {
         try {
             $response = $this->bexioClient->post('contact', ['json' => $contactData]);
             $responseBody = $response->getBody()->getContents();
-            error_log('Create or Update Contact Response: ' . $responseBody);
+            error_log('Create/Update Contact Response: ' . $responseBody);
 
             $responseJson = json_decode($responseBody, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $responseJson['id'] ?? null;
             } else {
-                error_log('Failed to decode contact response');
+                error_log('Failed to decode contact response: ' . json_last_error_msg());
                 return null;
             }
         } catch (RequestException $e) {
@@ -91,5 +100,9 @@ class WooCommerceBexioContactIntegration {
             }
             return null;
         }
+    }
+
+    public function publicCreateOrUpdateContact(array $contactData) {
+        return $this->createOrUpdateContact($contactData);
     }
 }
