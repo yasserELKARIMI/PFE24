@@ -13,6 +13,7 @@ class WooCommerceBexioOrderIntegration {
     private $contactIntegration;
 
     public function __construct(WooCommerceBexioContactIntegration $contactIntegration) {
+<<<<<<< HEAD
         if (!$contactIntegration) {
             error_log('Contact integration not passed to WooCommerceBexioOrderIntegration');
             return;
@@ -20,6 +21,8 @@ class WooCommerceBexioOrderIntegration {
 
         $this->contactIntegration = $contactIntegration;
 
+=======
+>>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
         $credentials = \App\Options\Settings::getCredentials();
         $this->bexioClient = new Client([
             'base_uri' => 'https://api.bexio.com/2.0/',
@@ -37,6 +40,7 @@ class WooCommerceBexioOrderIntegration {
             ],
         ]);
 
+<<<<<<< HEAD
         if ($credentials['sync_method'] === 'automatic') {
             $interval = isset($credentials['sync_interval']) ? (int)$credentials['sync_interval'] * 3600 : 24 * 3600;
             if (!wp_next_scheduled('sync_woocommerce_bexio_orders')) {
@@ -53,7 +57,38 @@ class WooCommerceBexioOrderIntegration {
             wp_schedule_event(time(), 'hourly', 'sync_woocommerce_bexio_orders');
         }
         add_action('sync_woocommerce_bexio_orders', [$this, 'syncOrders']);
+=======
+        $this->contactIntegration = $contactIntegration;
+
+        add_action('init', [$this, 'setupScheduledTasks']);
+>>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
     }
+
+    public function setupScheduledTasks() {
+        $credentials = \App\Options\Settings::getCredentials();
+        $syncMethod = $credentials['sync_method'];
+        $syncInterval = $credentials['sync_interval'];
+
+        if ($syncMethod === 'automatic') {
+            $intervalInSeconds = $this->convertTimeToSeconds($syncInterval);
+            if (!wp_next_scheduled('sync_woocommerce_bexio_orders')) {
+                wp_schedule_event(time(), 'hourly', 'sync_woocommerce_bexio_orders');
+            }
+            add_action('sync_woocommerce_bexio_orders', [$this, 'syncOrders']);
+        }
+    }
+
+    private function convertTimeToSeconds($time) {
+        // Convert time picker format (HH:MM) to seconds
+        list($hours, $minutes) = explode(':', $time);
+    
+        // Cast to integers
+        $hours = (int) $hours;
+        $minutes = (int) $minutes;
+    
+        return ($hours * 3600) + ($minutes * 60);
+    }
+    
 
     public function syncOrders() {
         $orders = wc_get_orders(['limit' => -1]);
@@ -94,6 +129,7 @@ class WooCommerceBexioOrderIntegration {
         if ($customer_id) {
             $customer = get_user_by('ID', $customer_id);
             if ($customer instanceof \WP_User) {
+<<<<<<< HEAD
                 if ($this->contactIntegration) {
                     $contact_id = $this->contactIntegration->publicCreateOrUpdateContact($this->contactIntegration->formatContactForBexio($customer));
                     if ($contact_id) {
@@ -108,6 +144,14 @@ class WooCommerceBexioOrderIntegration {
             }
         } else {
             error_log("No customer ID found in order.");
+=======
+                $contact_id = $this->contactIntegration->publicCreateOrUpdateContact($this->contactIntegration->formatContactForBexio($customer));
+                return $contact_id;
+            }
+            error_log("No valid customer found for order {$order->get_id()}");
+        } else {
+            error_log("Order {$order->get_id()} has no associated customer.");
+>>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
         }
         return null;
     }
@@ -117,32 +161,60 @@ class WooCommerceBexioOrderIntegration {
             error_log('No contact ID provided for order ' . $order->get_id());
             return null;
         }
+<<<<<<< HEAD
 
         $positions = [];
         foreach ($order->get_items() as $item) {
             $unitPrice = $item->get_total() / $item->get_quantity();
 
+=======
+    
+        $positions = [];
+        foreach ($order->get_items() as $item) {
+            $unitPrice = $item->get_total() / $item->get_quantity();
+            $totalAmount = $item->get_total();
+    
+            // Assuming you're using the same currency for all items
+            $unitPriceConverted = $this->convertCurrency($unitPrice, 'MAD', 'USD');
+            $totalAmountConverted = $this->convertCurrency($totalAmount, 'MAD', 'USD');
+    
+>>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
             $positions[] = [
                 'type' => 'KbPositionCustom',
                 'text' => $item->get_name(),
                 'tax_id' => 3, // Ensure this matches Bexio's tax ID
                 'amount' => $item->get_quantity(),
+<<<<<<< HEAD
                 'unit_price' => $unitPrice,
+=======
+                // Specify the currency ID for the whole order
+                'unit_price' => $unitPriceConverted,
+                // Removed 'currency' field from individual items
+>>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
             ];
         }
-
+    
         $orderData = [
             'contact_id' => $contactId,
+<<<<<<< HEAD
             'title' => $order->get_id(),
             'is_valid_from' => $order->get_date_created()->date('Y-m-d'),
             'user_id' => 1, // Or fetch the correct user ID
             'currency_id' => 8, // Assuming MAD as the currency ID
+=======
+            'title' =>  $order->get_id(),
+            'is_valid_from' => $order->get_date_created()->date('Y-m-d'),
+            'user_id' => 1,
+            'currency_id' => 8,
+            // Or fetch the correct user ID
+>>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
             'positions' => $positions,
         ];
-
+    
         error_log('Formatted Order Data: ' . print_r($orderData, true));
         return $orderData;
     }
+    
 
     protected function sendOrderToBexio($order_id, $orderData) {
         try {
@@ -171,5 +243,24 @@ class WooCommerceBexioOrderIntegration {
             $responseBody = Message::toString($e->getResponse());
             error_log('Response for order ' . $order_id . ': ' . $responseBody);
         }
+<<<<<<< HEAD
+=======
+    }
+
+    private function convertCurrency($amount, $fromCurrency, $toCurrency) {
+        // Example conversion rate from MAD to USD
+        $conversionRates = [
+            'MAD' => [
+                'USD' => 0.10 // Example rate, you should fetch this from a reliable source
+            ]
+        ];
+
+        if (isset($conversionRates[$fromCurrency][$toCurrency])) {
+            $rate = $conversionRates[$fromCurrency][$toCurrency];
+            return $amount * $rate;
+        }
+
+        return $amount; // Return the original amount if no conversion rate is found
+>>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
     }
 }
