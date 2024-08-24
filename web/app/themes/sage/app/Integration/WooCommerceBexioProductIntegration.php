@@ -33,11 +33,16 @@ class WooCommerceBexioProductIntegration {
         ]);
         if ($credentials['sync_method'] === 'automatic') {
             $interval = isset($credentials['sync_interval']) ? (int)$credentials['sync_interval'] * 3600 : 24 * 3600;
+        if ($credentials['sync_method'] === 'automatic') {
+            $interval = isset($credentials['sync_interval']) ? (int)$credentials['sync_interval'] * 3600 : 24 * 3600;
             if (!wp_next_scheduled('sync_woocommerce_bexio_products')) {
+                wp_schedule_event(time(), 'sync_custom_interval', 'sync_woocommerce_bexio_products');
                 wp_schedule_event(time(), 'sync_custom_interval', 'sync_woocommerce_bexio_products');
             }
         }
+        }
 
+        // Hook for manual sync
         // Hook for manual sync
         add_action('sync_woocommerce_bexio_products', [$this, 'syncProducts']);
     }
@@ -80,8 +85,5 @@ class WooCommerceBexioProductIntegration {
         return 1;
     }
 
-    protected function getCurrencyId($currencyCode) {
-        // Implement logic to map WooCommerce currency code to Bexio currency ID
-        return 1; // Placeholder
-    }
+
 }
