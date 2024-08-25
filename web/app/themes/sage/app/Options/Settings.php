@@ -3,10 +3,7 @@ namespace App\Options;
 
 use App\Integration\WooCommerceBexioOrderIntegration;
 use App\Integration\WooCommerceBexioProductIntegration;
-<<<<<<< HEAD
 use App\Integration\WooCommerceBexioContactIntegration;
-=======
->>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
 
 class Settings {
     private static $instance = null;
@@ -148,7 +145,6 @@ class Settings {
 
     // Function to handle manual sync orders
     public function manualSyncOrders() {
-<<<<<<< HEAD
         // Create an instance of WooCommerceBexioContactIntegration
         $contactIntegration = new WooCommerceBexioContactIntegration();
 
@@ -156,9 +152,6 @@ class Settings {
         $orderIntegration = new WooCommerceBexioOrderIntegration($contactIntegration);
 
         // Perform sync
-=======
-        $orderIntegration = new WooCommerceBexioOrderIntegration();
->>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
         $orderIntegration->syncOrders();
 
         // Redirect after sync
@@ -168,14 +161,10 @@ class Settings {
 
     // Function to handle manual sync products
     public function manualSyncProducts() {
-<<<<<<< HEAD
         // Create an instance of WooCommerceBexioProductIntegration
         $productIntegration = new WooCommerceBexioProductIntegration();
 
         // Perform sync
-=======
-        $productIntegration = new WooCommerceBexioProductIntegration();
->>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
         $productIntegration->syncProducts();
 
         // Redirect after sync
@@ -201,7 +190,6 @@ class Settings {
 // Hook the automatic synchronization event
 add_action('bexio_auto_sync', function() {
     $settings = \App\Options\Settings::getInstance();
-<<<<<<< HEAD
     
     // Create an instance of WooCommerceBexioContactIntegration
     $contactIntegration = new WooCommerceBexioContactIntegration();
@@ -215,8 +203,4 @@ add_action('bexio_auto_sync', function() {
     // Perform product sync
     $productIntegration = new WooCommerceBexioProductIntegration();
     $productIntegration->syncProducts();
-=======
-    $settings->manualSyncOrders();
-    $settings->manualSyncProducts();
->>>>>>> cebb223a0a4de743d1f237b6d942ab2f3e2050a9
 });
