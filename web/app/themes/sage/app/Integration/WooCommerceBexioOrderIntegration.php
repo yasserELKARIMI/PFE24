@@ -11,15 +11,9 @@ class WooCommerceBexioOrderIntegration {
     private $bexioClient;
     private $woocommerceClient;
     private $contactIntegration;
+    private $selectedCurrency; // Add this property
 
     public function __construct(WooCommerceBexioContactIntegration $contactIntegration) {
-        if (!$contactIntegration) {
-            error_log('Contact integration not passed to WooCommerceBexioOrderIntegration');
-            return;
-        }
-
-        $this->contactIntegration = $contactIntegration;
-
         $credentials = \App\Options\Settings::getCredentials();
         $this->bexioClient = new Client([
             'base_uri' => 'https://api.bexio.com/2.0/',
@@ -37,15 +31,12 @@ class WooCommerceBexioOrderIntegration {
             ],
         ]);
 
-        if ($credentials['sync_method'] === 'automatic') {
-            $interval = isset($credentials['sync_interval']) ? (int)$credentials['sync_interval'] * 3600 : 24 * 3600;
-            if (!wp_next_scheduled('sync_woocommerce_bexio_orders')) {
-                wp_schedule_event(time(), 'sync_custom_interval', 'sync_woocommerce_bexio_orders');
-            }
-        }
+        $this->contactIntegration = $contactIntegration;
+        
+        // Get selected currency from settings
+        $this->selectedCurrency = \App\Options\Settings::getSelectedCurrency();
 
-        // Hook for manual sync
-        add_action('sync_woocommerce_bexio_orders', [$this, 'syncOrders']);
+        add_action('init', [$this, 'setupScheduledTasks']);
     }
 
     public function setupScheduledTasks() {
@@ -94,20 +85,12 @@ class WooCommerceBexioOrderIntegration {
         if ($customer_id) {
             $customer = get_user_by('ID', $customer_id);
             if ($customer instanceof \WP_User) {
-                if ($this->contactIntegration) {
-                    $contact_id = $this->contactIntegration->publicCreateOrUpdateContact($this->contactIntegration->formatContactForBexio($customer));
-                    if ($contact_id) {
-                        return $contact_id;
-                    }
-                    error_log("Failed to create or update contact for customer {$customer_id}");
-                } else {
-                    error_log("Contact integration is not initialized.");
-                }
-            } else {
-                error_log("Customer with ID {$customer_id} is not a WP_User.");
+                $contact_id = $this->contactIntegration->publicCreateOrUpdateContact($this->contactIntegration->formatContactForBexio($customer));
+                return $contact_id;
             }
+            error_log("No valid customer found for order {$order->get_id()}");
         } else {
-            error_log("No customer ID found in order.");
+            error_log("Order {$order->get_id()} has no associated customer.");
         }
         return null;
     }
@@ -121,22 +104,28 @@ class WooCommerceBexioOrderIntegration {
         $positions = [];
         foreach ($order->get_items() as $item) {
             $unitPrice = $item->get_total() / $item->get_quantity();
+            $totalAmount = $item->get_total();
+
+            // Assuming you're using the selected currency for all items
+            $unitPriceConverted = $unitPrice; // No conversion logic needed
+            $totalAmountConverted = $totalAmount; // No conversion logic needed
 
             $positions[] = [
                 'type' => 'KbPositionCustom',
                 'text' => $item->get_name(),
                 'tax_id' => 3, // Ensure this matches Bexio's tax ID
                 'amount' => $item->get_quantity(),
-                'unit_price' => $unitPrice,
+                'unit_price' => $unitPriceConverted,
             ];
         }
 
+        // Specify the currency for the entire order
         $orderData = [
             'contact_id' => $contactId,
-            'title' => $order->get_id(),
+            'title' =>  $order->get_id(),
             'is_valid_from' => $order->get_date_created()->date('Y-m-d'),
-            'user_id' => 1, // Or fetch the correct user ID
-            'currency_id' => 8, // Assuming MAD as the currency ID
+            'user_id' => 1, // This should match your Bexio user ID
+            'currency_id' => $this->selectedCurrency, // Use the selected currency here
             'positions' => $positions,
         ];
 
@@ -145,11 +134,25 @@ class WooCommerceBexioOrderIntegration {
     }
 
     protected function sendOrderToBexio($order_id, $orderData) {
-        try {
-            $response = $this->bexioClient->post('kb_order', ['json' => $orderData]);
-            $this->handleResponse($response, $order_id);
-        } catch (RequestException $e) {
-            $this->handleRequestException($e, $order_id);
+        // Check if the order is already synced with Bexio
+        $bexio_order_id = get_post_meta($order_id, '_bexio_order_id', true);
+
+        if ($bexio_order_id) {
+            // Update the existing order in Bexio
+            try {
+                $response = $this->bexioClient->put("kb_order/{$bexio_order_id}", ['json' => $orderData]);
+                $this->handleResponse($response, $order_id);
+            } catch (RequestException $e) {
+                $this->handleRequestException($e, $order_id);
+            }
+        } else {
+            // Create a new order in Bexio
+            try {
+                $response = $this->bexioClient->post('kb_order', ['json' => $orderData]);
+                $this->handleResponse($response, $order_id);
+            } catch (RequestException $e) {
+                $this->handleRequestException($e, $order_id);
+            }
         }
     }
 
@@ -160,6 +163,8 @@ class WooCommerceBexioOrderIntegration {
         $responseJson = json_decode($responseBody, true);
         if (json_last_error() === JSON_ERROR_NONE) {
             error_log('Order ID in Bexio: ' . $responseJson['id']);
+            // Store the Bexio order ID in WooCommerce order meta
+            update_post_meta($order_id, '_bexio_order_id', $responseJson['id']);
         } else {
             error_log('Failed to decode Bexio response for order ' . $order_id . ': ' . json_last_error_msg());
         }
