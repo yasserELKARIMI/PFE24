@@ -188,6 +188,13 @@ button.btn.btn-secondary {
   }
 }
 
+/* Hide bullet points in submenu */
+.dropdown-menu ul {
+  list-style-type: none; /* Removes bullet points */
+  padding-left: 0;       /* Removes default padding */
+  margin: 0;             /* Removes any margin */
+}
+
 /* Dropdown menu adjustments for larger screens */
 @media (min-width: 992px) {
   .navbar li .dropdown-menu {
