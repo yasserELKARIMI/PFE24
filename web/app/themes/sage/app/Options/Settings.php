@@ -1,6 +1,7 @@
 <?php
 namespace App\Options;
 
+use GuzzleHttp\Client;
 use App\Integration\WooCommerceBexioOrderIntegration;
 use App\Integration\WooCommerceBexioProductIntegration;
 use App\Integration\WooCommerceBexioContactIntegration;
@@ -30,8 +31,22 @@ class Settings {
         return self::$instance;
     }
 
+
     // Function to register ACF fields
     public function registerFields() {
+        $currencies = $this->fetchCurrenciesFromBexio();
+        $taxRates = $this->fetchTaxRatesFromBexio();
+
+        $currency_choices = [];
+        foreach ($currencies as $currency) {
+            $currency_choices[$currency['id']] = $currency['name'];
+        }
+
+        $tax_rate_choices = [];
+        foreach ($taxRates as $taxRate) {
+            $tax_rate_choices[$taxRate['id']] = $taxRate['code']; // edit by 'code' to display the VAT Code or 'name' to display the Description
+        }
+
         if (function_exists('acf_add_local_field_group')) {
             acf_add_local_field_group([
                 'key' => 'group_bexio_settings',
@@ -90,6 +105,26 @@ class Settings {
                             ],
                         ],
                     ],
+
+                    [
+                        'key' => 'field_currency',
+                        'label' => 'Currency',
+                        'name' => 'bexio_currency',
+                        'type' => 'select',
+                        'choices' => $currency_choices,
+                        'instructions' => 'Select the currency to be used.',
+                        'required' => 1,
+                    ],
+
+                    [
+                        'key' => 'field_tax_rate',
+                        'label' => 'Tax Rate',
+                        'name' => 'bexio_tax_rate',
+                        'type' => 'select',
+                        'choices' => $tax_rate_choices,
+                        'instructions' => 'Select the tax rate to be applied.',
+                        'required' => 1,
+                    ],
                 ],
                 'location' => [
                     [
@@ -112,8 +147,66 @@ class Settings {
             'woocommerce_consumer_secret' => get_field('woocommerce_consumer_secret', 'option'),
             'sync_method' => get_field('sync_method', 'option'),
             'sync_interval' => get_field('sync_interval', 'option'),
+            'bexio_currency' => get_field('bexio_currency', 'option'),
+            'bexio_tax_rate' => get_field('bexio_tax_rate', 'option'),
         ];
     }
+
+    public static function getSelectedCurrency() {
+        return get_field('bexio_currency', 'option');
+    }
+
+    public static function getSelectedTaxRate() {
+        return get_field('bexio_tax_rate', 'option');
+    }
+
+
+        // Function to fetch currencies from Bexio API
+    public function fetchCurrenciesFromBexio() {
+        $credentials = self::getCredentials();
+
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('GET', 'https://api.bexio.com/3.0/currencies', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials['bexio_token'],
+                    'Accept'        => 'application/json',
+                ],
+            ]);
+
+            if ($response->getStatusCode() === 200) {
+                $currencies = json_decode($response->getBody(), true);
+                return $currencies; // Return the list of currencies
+            }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            error_log('Failed to fetch currencies from Bexio: ' . $e->getMessage());
+            return [];
+        }
+
+        return [];
+    }
+
+    // Fetch tax rates from Bexio API
+    public function fetchTaxRatesFromBexio() {
+        $credentials = self::getCredentials();
+
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('GET', 'https://api.bexio.com/3.0/taxes', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $credentials['bexio_token'],
+                    'Accept' => 'application/json',
+                ],
+            ]);
+
+            $taxRates = json_decode($response->getBody(), true);
+            return $taxRates;
+        } catch (\Exception $e) {
+            error_log('Error fetching tax rates from Bexio: ' . $e->getMessage());
+            return [];
+        }
+    }
+
 
     // Function to add Admin Menu
     public function addAdminMenu() {
@@ -145,29 +238,19 @@ class Settings {
 
     // Function to handle manual sync orders
     public function manualSyncOrders() {
-        // Create an instance of WooCommerceBexioContactIntegration
         $contactIntegration = new WooCommerceBexioContactIntegration();
-
-        // Pass it to the WooCommerceBexioOrderIntegration constructor
         $orderIntegration = new WooCommerceBexioOrderIntegration($contactIntegration);
-
-        // Perform sync
         $orderIntegration->syncOrders();
 
-        // Redirect after sync
         wp_redirect(admin_url('admin.php?page=bexio-integration&synced_orders=true'));
         exit;
     }
 
     // Function to handle manual sync products
     public function manualSyncProducts() {
-        // Create an instance of WooCommerceBexioProductIntegration
         $productIntegration = new WooCommerceBexioProductIntegration();
-
-        // Perform sync
         $productIntegration->syncProducts();
 
-        // Redirect after sync
         wp_redirect(admin_url('admin.php?page=bexio-integration&synced_products=true'));
         exit;
     }
@@ -190,17 +273,11 @@ class Settings {
 // Hook the automatic synchronization event
 add_action('bexio_auto_sync', function() {
     $settings = \App\Options\Settings::getInstance();
-    
-    // Create an instance of WooCommerceBexioContactIntegration
+
     $contactIntegration = new WooCommerceBexioContactIntegration();
-
-    // Pass it to the WooCommerceBexioOrderIntegration constructor
     $orderIntegration = new WooCommerceBexioOrderIntegration($contactIntegration);
-
-    // Perform sync
     $orderIntegration->syncOrders();
-    
-    // Perform product sync
+
     $productIntegration = new WooCommerceBexioProductIntegration();
     $productIntegration->syncProducts();
 });
